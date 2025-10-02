@@ -1,0 +1,76 @@
+python generate_custom_sane.py 80000000000 --X-min 70000000000 --segment-size 2000000 --dtype float32 --outdir . --prefix angles_7e10_8e10_
+mv angles_1e10_2e10_20000000000.csv.gz angles_1e10_2e10.csv.gz
+mv angles_2e10_3e10_30000000000.csv.gz angles_2e10_3e10.csv.gz
+mv angles_2e10_3e10_30000000000.csv.gz angles_2e10_3e10.csv.gz
+mv angles_3e10_4e10_40000000000.csv.gz angles_3e10_4e10.csv.gz
+mv angles_4e10_5e10_50000000000.csv.gz angles_4e10_5e10.csv.gz
+mv angles_5e10_6e10_60000000000.csv.gz angles_5e10_6e10.csv.gz
+mv angles_6e10_7e10_70000000000.csv.gz angles_6e10_7e10.csv.gz
+mv angles_7e10_8e10_80000000000.csv.gz angles_7e10_8e10.csv.gz
+python run_checkpoints_over_chunks.py \
+  --chunks \
+    1e10:2e10:angles_1e10_2e10.csv.gz \
+    2e10:3e10:angles_2e10_3e10.csv.gz \
+    3e10:4e10:angles_3e10_4e10.csv.gz \
+    4e10:5e10:angles_4e10_5e10.csv.gz \
+    5e10:6e10:angles_5e10_6e10.csv.gz \
+    6e10:7e10:angles_6e10_7e10.csv.gz \
+    7e10:8e10:angles_7e10_8e10.csv.gz \
+  --checkpoints 20000000000 30000000000 40000000000 50000000000 60000000000 70000000000 80000000000  \
+  --sigmas 0.03 \
+  --bins 65536 \
+  --chunk-rows 1000000 \
+  --train-frac 0.6 \
+  --out-csv analysis_1e10_1e11.csv \
+  --runner phase_stream_runner_fast_chunked.py
+python run_checkpoints_over_chunks.py \
+  --chunks \
+    1e10:2e10:angles_1e10_2e10.csv.gz \
+    2e10:3e10:angles_2e10_3e10.csv.gz \
+    3e10:4e10:angles_3e10_4e10.csv.gz \
+    4e10:5e10:angles_4e10_5e10.csv.gz \
+    5e10:6e10:angles_5e10_6e10.csv.gz \
+    6e10:7e10:angles_6e10_7e10.csv.gz \
+    7e10:8e10:angles_7e10_8e10.csv.gz \
+  --checkpoints 20000000000 30000000000 40000000000 50000000000 60000000000 70000000000 80000000000  \
+  --sigmas 0.03 \
+  --bins 65536 \
+  --chunk-rows 1000000 \
+  --train-frac 0.6 \
+  --out-csv analysis_1e10_1e11.csv \
+  --runner phase_stream_runner_fast_chunked.py
+python fit_from_analysis_cli.py \
+  --analysis analysis_1e10_1e11.csv \
+  --sigma 0.03 \
+  --theta-col theta_star_deg_test \
+  --save-plot fit_all_1e10_1e11.png \
+  --save-json  fit_all_1e10_1e11.json
+  
+python run_checkpoints_over_chunks.py \
+  --chunks \
+    1e10:2e10:angles_1e10_2e10.csv.gz \
+    2e10:3e10:angles_2e10_3e10.csv.gz \
+    3e10:4e10:angles_3e10_4e10.csv.gz \
+    4e10:5e10:angles_4e10_5e10.csv.gz \
+    5e10:6e10:angles_5e10_6e10.csv.gz \
+    6e10:7e10:angles_6e10_7e10.csv.gz \
+    7e10:8e10:angles_7e10_8e10.csv.gz \
+    8e10:9e10:angles_8e10_9e10.csv.gz \
+    9e10:1e11:angles_9e10_1e11.csv.gz \
+  --checkpoints 20000000000 30000000000 40000000000 50000000000 60000000000 70000000000 80000000000 90000000000 100000000000 \
+  --sigmas 0.03 0.1 0.2 \
+  --bins 65536 \
+  --chunk-rows 1000000 \
+  --train-frac 0.7 \
+  --out-csv analysis_1e10_1e11_bins65536_train07.csv \
+  --runner phase_stream_runner_fast_chunked.py
+  
+python run_checkpoints_over_chunks.py \
+  --chunks 1e9:1e12:angles_up_to_1e12.csv.gz \
+  --checkpoints 1000000000000 \
+  --sigmas 0.03 0.1 0.2 \
+  --bins 65536 \
+  --chunk-rows 1000000 \
+  --train-frac 0.6 \
+  --out-csv analysis_1e12_cumulative.csv \
+  --runner phase_stream_runner_fast_chunked.py
