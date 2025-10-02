@@ -28,7 +28,6 @@ The standard execution pipeline follows three main stages, often used for ranges
 ### 2.2. Analysis: `phase_stream_runner_fast_chunked.py` & `run_checkpoints_over_chunks.py`
 
 | Purpose | **Core Analysis Tool:** Calculate phase $\Theta(X)$ at a single checkpoint. |
-| :--- | :--- |
 | **Function** | A **memory-safe streamer** designed to process massive angle files incrementally. It builds circular histograms, performs a deterministic **Train/Test split**, calculates the resultant vector $V$, and determines the phase $\Theta(X)$ and resultant length $R$. It uses **Circular Gaussian KDE** for smoothing, controlled by the `sigma` parameter. |
 | **Usage** | This script is typically called repeatedly by the `run_checkpoints_over_chunks.py` orchestration script. |
 | **Key Args** | `--checkpoints` (list of X values), `--angles-files` (X:path mapping), `--sigmas` (smoothing parameter list). |
